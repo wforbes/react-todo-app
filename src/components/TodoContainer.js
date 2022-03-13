@@ -27,11 +27,32 @@ class TodoContainer extends React.Component {
 			}
 		]
 	}
+	handleChange = (id) => {
+		// passing prevState because React doesn't
+		//	guarantee that this.state is up to date.
+		//	It may batch or defer the update until later
+		this.setState(prevState => ({
+			todos: prevState.todos.map(todo => {
+				if (todo.id === id) {
+					// Strict-mode doesn't allow
+					//	direct state modification (?)
+					return {
+						...todo,
+						completed: !todo.completed
+					}
+				}
+				return todo
+			})
+		}))
+	}
 	render() {
 		return (
 			<div>
 				<Header />
-				<TodoList todos={this.state.todos} />
+				<TodoList
+					todos={this.state.todos}
+					handleChangeProps={this.handleChange}
+				/>
 			</div>
 		)
 	}
